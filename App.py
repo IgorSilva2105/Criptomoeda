@@ -7,7 +7,7 @@ class BlockchainApp:
         self.root.title("Aether AI - Blockchain Explorer")
         
         # Carregar a imagem do logo
-        self.logo = Image.open(r"C:\Users\Igor Silva\Downloads\Criptomoeda.png")
+        self.logo = Image.open(r"C:\Users\Igor Silva\Cripto_Moeda\Criptomoeda.png")
         self.logo = self.logo.resize((500, 500), Image.LANCZOS)
         self.logo = ImageTk.PhotoImage(self.logo)
         
