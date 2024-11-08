@@ -179,10 +179,30 @@ print(f"Endereço da carteira: {my_wallet.get_address()}")
 #__________________________________________________________________________________________________________________________
 
 class Blockchain:
-    # (Parte anterior do código)
-    
+    def __init__(self, difficulty=2):
+        self.chain = [self.create_genesis_block()]
+        self.difficulty = difficulty
+        self.pending_transactions = []
+        self.mining_reward = 10
+
+    def create_genesis_block(self):
+        return Block(0, "0", [Transaction("System", "FirstUser", 100)])
+
+    def get_latest_block(self):
+        return self.chain[-1]
+
+    def create_transaction(self, transaction):
+        """Adiciona uma transação à lista de transações pendentes."""
+        self.pending_transactions.append(transaction)
+
+    def mine_pending_transactions(self, miner_address):
+        new_block = Block(len(self.chain), self.get_latest_block().hash, self.pending_transactions)
+        new_block.mine_block(self.difficulty)
+        self.chain.append(new_block)
+        # Recompensa o minerador
+        self.pending_transactions = [Transaction("System", miner_address, self.mining_reward)]
+
     def get_balance(self, address):
-        """Calcula o saldo de uma carteira com base nas transações da blockchain."""
         balance = 0
         for block in self.chain:
             for tx in block.transactions:
@@ -191,27 +211,6 @@ class Blockchain:
                 if tx.recipient == address:
                     balance += tx.amount
         return balance
-
-# Criando uma blockchain e uma carteira
-blockchain = Blockchain()
-my_wallet = Wallet()
-recipient_wallet = Wallet()
-
-# Criando uma transação e verificando o saldo
-transaction = Transaction(my_wallet.get_address(), recipient_wallet.get_address(), 20)
-blockchain.create_transaction(transaction)
-
-# Minerando para processar a transação
-blockchain.mine_pending_transactions(my_wallet.get_address())
-
-# Verificando os saldos das carteiras
-print(f"Saldo da minha carteira: {blockchain.get_balance(my_wallet.get_address())}")
-print(f"Saldo da carteira do destinatário: {blockchain.get_balance(recipient_wallet.get_address())}")
-
-
-
-
-
 
 #__________________________________________________________________________________________________________
 # Exemplo de Implementação em Python: Rede P2P Simples
